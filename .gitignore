@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+cert.pem
+key.pem
+security/rsa_private.pem
+security/rsa_public.pem
+database/*.db
+backups/*.db
+logs/*.log
+*.db
+*.log
+frontend/node_modules/
+frontend/dist/
