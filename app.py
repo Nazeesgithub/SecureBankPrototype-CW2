@@ -640,6 +640,22 @@ def touch_session():
     session.permanent = True
     app.permanent_session_lifetime = timedelta(seconds=app.config["SESSION_TIMEOUT_SECONDS"])
 
+    # Prevents a locked-out account from continuing to use a session it
+    # obtained before the lock was applied: user_locked()/unlock_if_expired()
+    # were previously only consulted at /api/login and /api/otp/verify, so an
+    # account locked mid-session (e.g. by the brute-force attack simulation,
+    # or an admin) stayed fully usable on every other route until its cookie
+    # expired on its own. Re-checking here, on every authenticated request,
+    # closes that gap.
+    if current_user.is_authenticated:
+        db = get_db()
+        row = db.execute(
+            "SELECT id, locked_until FROM users WHERE id = ?", (current_user.id,)
+        ).fetchone()
+        if row is None or user_locked(row):
+            logout_user()
+            session.clear()
+
 
 def serialize_user_row(row):
     return {
