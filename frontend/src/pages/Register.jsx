@@ -36,7 +36,7 @@ export default function Register() {
         <p className="eyebrow">Secure Onboarding</p>
         <h1 style={{ marginTop: 8, marginBottom: 8 }}>Create your account</h1>
         <p className="text-soft" style={{ marginBottom: 24 }}>
-          Passwords are hashed with SHA-256 and an OTP secret is generated per user.
+          Passwords are hashed with salted scrypt and an OTP secret is generated per user.
         </p>
 
         {error && <div className="alert alert-danger">{error}</div>}

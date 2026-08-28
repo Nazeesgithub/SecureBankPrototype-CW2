@@ -1,30 +1,121 @@
 :root {
-  --bg: #d6d9dc;
-  --bg-alt: #e8e6da;
-  --card: rgba(255, 255, 255, 0.55);
-  --card-solid: #ffffff;
-  --ink: #16181a;
-  --ink-soft: #6b7075;
-  --accent: #4f6f52;
-  --accent-soft: #dce7dd;
-  --accent-dark: #2f4a33;
-  --accent-bright: #6fa06f;
-  --gold: #b3893a;
-  --gold-soft: #f3e7d1;
-  --border: rgba(22, 24, 26, 0.08);
-  --danger: #b3432f;
-  --danger-soft: #f6e2dd;
-  --warning: #b3893a;
-  --ink-strong: #0d0f10;
-  --sidebar-bg: #f2f1ec;
-  --radius-lg: 22px;
-  --radius-md: 16px;
-  --radius-sm: 12px;
-  --shadow-card: 0 1px 2px rgba(15, 17, 19, 0.05), 0 16px 32px -12px rgba(15, 17, 19, 0.18);
-  --shadow-card-hover: 0 2px 4px rgba(15, 17, 19, 0.06), 0 24px 44px -12px rgba(15, 17, 19, 0.24);
-  --shadow-pop: 0 8px 16px -4px rgba(13, 15, 16, 0.3);
+  /* ==================================================================
+     BRAND
+     Taken from the shield in public/favicon.svg. The gradient runs
+     deep -> mid -> accent, and the Pipeline Rail reuses exactly that
+     ramp so the mark and the product's central idea are one object.
+     ================================================================== */
+  --brand-deep: #1b2a6b;
+  --brand-mid: #12608f;
+  --brand-accent: #0fa3a3;
+  /* --brand-accent is 3.09:1 on white: it is a GRAPHIC colour only.
+     Use --brand-accent-ink wherever teal has to be text or an icon. */
+  --brand-accent-ink: #0a7373;
+
+  /* ==================================================================
+     SURFACES AND INK
+     Every value below is verified against its real background:
+       --ink        16.2:1 on surface
+       --ink-soft    5.7:1 on surface, 6.1:1 on white   (was 3.53:1)
+     ================================================================== */
+  --surface: #f6f8fb;
+  --surface-raised: #ffffff;
+  --surface-sunken: #eef2f7;
+  --ink: #0f1b2e;
+  --ink-soft: #55637a;
+  --ink-strong: #08111e;
+  --border: rgba(15, 27, 46, 0.12);
+  --border-strong: rgba(15, 27, 46, 0.22);
+
+  /* ==================================================================
+     STATE
+     Red is reserved. --alarm means one thing only: an integrity check
+     failed. Anything merely pending, idle or not-yet-tested uses
+     --ink-soft; anything degraded-but-working uses --warn.
+     ================================================================== */
+  --alarm: #b3261e;
+  --alarm-soft: #fbeae8;
+  --alarm-strong: #8f1e17;
+  --warn: #8a5300;
+  --warn-soft: #fcf3e3;
+  --ok: #0a7373;
+  --ok-soft: #e4f4f4;
+  --neutral-soft: #edf1f6;
+  --neutral-ink: #334155;
+
+  /* ==================================================================
+     TYPE SCALE  -  8 steps, ratio 1.2, 16px base.
+     Replaces the 20 ad-hoc font sizes previously in use.
+     ================================================================== */
+  --fs-micro: 0.75rem;
+  --fs-caption: 0.8125rem;
+  --fs-sm: 0.875rem;
+  --fs-body: 1rem;
+  --fs-lead: 1.125rem;
+  --fs-title: 1.375rem;
+  --fs-page: 1.75rem;
+  --fs-display: 2.25rem;
+
+  --lh-tight: 1.2;
+  --lh-snug: 1.35;
+  --lh-body: 1.55;
+
+  /* ==================================================================
+     SPACING SCALE  -  4px base. Replaces 20+ ad-hoc padding values.
+     ================================================================== */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  --card-pad: var(--sp-5);
+
+  /* ==================================================================
+     SHAPE AND DEPTH  -  one shadow, one hover shadow.
+     ================================================================== */
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --shadow-card: 0 1px 2px rgba(15, 27, 46, 0.05), 0 12px 28px -14px rgba(15, 27, 46, 0.22);
+  --shadow-card-hover: 0 2px 4px rgba(15, 27, 46, 0.07), 0 20px 40px -16px rgba(15, 27, 46, 0.28);
+  --shadow-pop: 0 10px 24px -8px rgba(15, 27, 46, 0.32);
+
   --font-heading: "Sora", "Segoe UI", sans-serif;
   --font-body: "DM Sans", "Segoe UI", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  /* Focus ring: 6.38:1 against the page surface, comfortably over the 3:1
+     that WCAG requires of a non-text UI indicator. */
+  --focus-ring: 0 0 0 2px var(--surface-raised), 0 0 0 4px var(--brand-mid);
+
+  /* ==================================================================
+     DEPRECATED ALIASES
+     The sage-green and gold palette is retired, but hundreds of existing
+     rules on the pages not yet migrated still reference these names.
+     Repointing the aliases at the brand family means those pages inherit
+     the new palette without a single rule being edited, and nothing
+     unstyled breaks. Do not use these in new rules.
+     ================================================================== */
+  --bg: var(--surface);
+  --bg-alt: var(--surface-sunken);
+  --card: rgba(255, 255, 255, 0.72);
+  --card-solid: var(--surface-raised);
+  --sidebar-bg: var(--surface-raised);
+  --accent: var(--brand-mid);
+  --accent-soft: var(--ok-soft);
+  --accent-dark: var(--brand-deep);
+  --accent-bright: var(--brand-accent);
+  --gold: var(--warn);
+  --gold-soft: var(--warn-soft);
+  /* Retargeted deliberately. Almost every historic use of --danger meant
+     "degraded" (HTTPS off, check not yet run), not "integrity failure".
+     Those now read amber, which frees red for --alarm alone. */
+  --danger: var(--warn);
+  --danger-soft: var(--warn-soft);
 }
 
 * {
@@ -1338,4 +1429,813 @@ th {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+/* ==========================================================================
+   DESIGN SYSTEM LAYER
+   Added in the ui-polish pass. Everything above this line is the original
+   stylesheet; rules here sit on top of it and on top of Bootstrap.
+   Scope: the global layer, Transfer, TransactionHistory and SecurityCenter.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. FOCUS
+   There was previously not one :focus-visible rule in this stylesheet, and a
+   bare `outline: none` that removed the browser default without replacing it.
+   Every interactive element now shows a ring, and it is :focus-visible so a
+   mouse click does not leave one behind.
+   -------------------------------------------------------------------------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible,
+.btn:focus-visible,
+.sidebar-link:focus-visible,
+.source-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+  position: relative;
+  z-index: 2;
+}
+
+/* The replacement for the original unreplaced `outline: none` on inputs. */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--brand-mid);
+}
+
+/* Keyboard users can jump straight past the sidebar to the page content. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: var(--sp-2);
+  z-index: 100;
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--brand-deep);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  left: var(--sp-4);
+}
+
+/* --------------------------------------------------------------------------
+   2. REDUCED MOTION
+   The topology marquee and the pipeline reveal both animated unconditionally.
+   Under prefers-reduced-motion everything renders in its final state: the
+   rail is drawn complete, steps are visible, nothing travels or pulses.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .pipeline-rail-node,
+  .pipeline-step {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .pipeline-rail::after {
+    transition: none !important;
+    height: 100% !important;
+  }
+
+  .topology-track,
+  .topology-pulse {
+    animation: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. TYPE AND SPACING, APPLIED
+   -------------------------------------------------------------------------- */
+body {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  background: var(--surface);
+}
+
+h1 {
+  font-size: var(--fs-page);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.015em;
+}
+
+h2,
+.section-title {
+  font-size: var(--fs-title);
+  line-height: var(--lh-snug);
+  letter-spacing: -0.01em;
+}
+
+.text-soft {
+  color: var(--ink-soft);
+}
+
+.eyebrow {
+  font-size: var(--fs-micro);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--brand-deep);
+  overflow-wrap: anywhere;
+}
+
+.card {
+  padding: var(--card-pad);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.topbar {
+  margin-bottom: var(--sp-5);
+}
+
+/* --------------------------------------------------------------------------
+   4. BADGE SEMANTICS  -  freeing red
+   Red previously marked the "Sent" direction of a transaction, the pending
+   step on the OTP screen, and a genuine integrity failure. Three unrelated
+   meanings, so the one that mattered did not stand out.
+   After this block: direction is neutral, pending is grey, degraded is amber,
+   and red belongs to .badge-alarm alone.
+   -------------------------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: 999px;
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+.badge-success {
+  background: var(--ok-soft);
+  color: var(--brand-accent-ink);
+}
+
+/* Direction is information, not judgement. Both variants are calm, and each
+   carries a glyph so the meaning survives greyscale. */
+.badge-outgoing,
+.badge-incoming {
+  background: var(--neutral-soft);
+  color: var(--neutral-ink);
+}
+
+.badge-incoming {
+  background: var(--ok-soft);
+  color: var(--brand-accent-ink);
+}
+
+/* Degraded but working: HTTPS off, a check not yet run. */
+.badge-warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+/* Pending / idle / not yet exercised. Never red. */
+.badge-idle {
+  background: var(--neutral-soft);
+  color: var(--ink-soft);
+}
+
+/* The only red badge in the application. */
+.badge-alarm {
+  background: var(--alarm);
+  color: #fff;
+  box-shadow: 0 0 0 3px var(--alarm-soft);
+}
+
+/* The pending pill on the OTP screen used --danger-soft, so "OTP Verified"
+   rendered pink and read as a failure before the user had done anything. */
+.badge-security.off {
+  background: var(--neutral-soft);
+  color: var(--ink-soft);
+}
+
+.badge-security.on {
+  background: var(--ok-soft);
+  color: var(--brand-accent-ink);
+}
+
+/* --------------------------------------------------------------------------
+   5. RESPONSIVE TABLES
+   Below 768px each row becomes a stacked label/value block driven by the
+   data-label attribute on every cell. No column is dropped and nothing
+   scrolls sideways at 375px.
+   -------------------------------------------------------------------------- */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .table-stack,
+  .table-stack thead,
+  .table-stack tbody,
+  .table-stack th,
+  .table-stack td,
+  .table-stack tr {
+    display: block;
+  }
+
+  .table-stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .table-stack tr {
+    margin-bottom: var(--sp-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-2) var(--sp-3);
+    background: var(--surface-raised);
+  }
+
+  .table-stack td {
+    display: grid;
+    grid-template-columns: minmax(7.5rem, 40%) 1fr;
+    gap: var(--sp-3);
+    align-items: start;
+    padding: var(--sp-2) 0;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+
+  .table-stack tr td:last-child {
+    border-bottom: none;
+  }
+
+  .table-stack td::before {
+    content: attr(data-label);
+    font-size: var(--fs-micro);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* The expandable security drawer spans the full row, so it gets no label. */
+  .table-stack td.cell-full {
+    display: block;
+  }
+
+  .table-stack td.cell-full::before {
+    content: none;
+  }
+
+  .table-responsive {
+    overflow-x: visible;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. SIGNATURE ELEMENT  -  THE PIPELINE RAIL
+   The seven or eight cryptographic stages rendered as nodes threaded on one
+   continuous gradient: --brand-deep -> --brand-mid -> --brand-accent, the
+   exact ramp in the favicon shield. This is the only place in the interface
+   that carries saturation, depth and motion.
+   -------------------------------------------------------------------------- */
+.rail {
+  position: relative;
+  margin-top: var(--sp-4);
+}
+
+/* The rail itself: a hairline track with a gradient that fills as stages
+   complete. On mobile it runs vertically down the left edge. */
+.rail-track {
+  position: absolute;
+  left: 19px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+
+.rail-track::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: var(--rail-fill, 0%);
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    var(--brand-deep) 0%,
+    var(--brand-mid) 55%,
+    var(--brand-accent) 100%
+  );
+  transition: height 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rail-nodes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  position: relative;
+}
+
+.rail-node {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: var(--sp-4);
+  align-items: start;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: rail-node-in 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--node-delay, 0ms);
+}
+
+@keyframes rail-node-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The numbered disc sitting on the rail. */
+.rail-marker {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  background: var(--surface-raised);
+  color: var(--ink-soft);
+  border: 2px solid var(--border-strong);
+  box-shadow: 0 0 0 4px var(--surface-raised);
+  position: relative;
+  z-index: 1;
+}
+
+.rail-node.is-complete .rail-marker {
+  background: linear-gradient(140deg, var(--brand-deep), var(--brand-mid));
+  border-color: transparent;
+  color: #fff;
+}
+
+/* The final stage carries the teal end of the shield gradient, so the rail
+   visibly lands on the same colour the mark ends on. */
+.rail-node.is-complete:last-child .rail-marker {
+  background: linear-gradient(140deg, var(--brand-mid), var(--brand-accent));
+}
+
+.rail-node.is-demo .rail-marker {
+  background: var(--warn-soft);
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
+.rail-node.is-skipped .rail-marker {
+  background: var(--neutral-soft);
+  border-color: var(--border-strong);
+  color: var(--ink-soft);
+}
+
+.rail-body {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--sp-3) var(--sp-4);
+  min-width: 0;
+}
+
+.rail-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2) var(--sp-3);
+  margin-bottom: var(--sp-1);
+}
+
+.rail-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--fs-body);
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.rail-algorithm {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  color: var(--brand-mid);
+  background: var(--surface-sunken);
+  padding: 2px var(--sp-2);
+  border-radius: var(--radius-sm);
+  overflow-wrap: anywhere;
+}
+
+.rail-value {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+  margin: 0;
+}
+
+.rail-status {
+  margin-left: auto;
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.rail-node.is-complete .rail-status {
+  color: var(--brand-accent-ink);
+}
+
+.rail-node.is-demo .rail-status {
+  color: var(--warn);
+}
+
+/* Desktop: the rail turns horizontal, stages reading left to right. */
+@media (min-width: 992px) {
+  .rail-track {
+    left: 8px;
+    right: 8px;
+    top: 19px;
+    bottom: auto;
+    height: 3px;
+    width: auto;
+  }
+
+  .rail-track::after {
+    inset: 0 auto 0 0;
+    height: 100%;
+    width: var(--rail-fill, 0%);
+    background: linear-gradient(
+      to right,
+      var(--brand-deep) 0%,
+      var(--brand-mid) 55%,
+      var(--brand-accent) 100%
+    );
+    transition: width 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .rail-nodes {
+    flex-direction: row;
+    align-items: stretch;
+    gap: var(--sp-3);
+  }
+
+  .rail-node {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .rail-marker {
+    margin: 0 auto;
+  }
+
+  .rail-body {
+    height: 100%;
+  }
+
+  .rail-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-1);
+  }
+
+  .rail-status {
+    margin-left: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. SECURITY STATUS GRID
+   Modules were text labels beside status words, so telling active from idle
+   meant reading every line. State is now carried by fill, glyph and border
+   together, never by colour alone, so the grid survives greyscale and
+   colour-blindness and can be read at a glance.
+   -------------------------------------------------------------------------- */
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--sp-3);
+}
+
+.status-tile {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--sp-3);
+  align-items: center;
+  padding: var(--sp-3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  min-width: 0;
+}
+
+.status-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  border: 2px solid var(--border-strong);
+  color: var(--ink-soft);
+  background: var(--surface-raised);
+  flex: none;
+}
+
+.status-text {
+  min-width: 0;
+}
+
+.status-label {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: var(--lh-snug);
+  overflow-wrap: anywhere;
+}
+
+.status-value {
+  display: block;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+/* Active: filled teal disc with a tick. */
+.status-tile.is-active {
+  border-left-color: var(--brand-accent);
+}
+
+.status-tile.is-active .status-dot {
+  background: var(--brand-accent-ink);
+  border-color: var(--brand-accent-ink);
+  color: #fff;
+}
+
+.status-tile.is-active .status-value {
+  color: var(--brand-accent-ink);
+}
+
+/* Idle: hollow ring, no fill. Different shape, not just a different colour. */
+.status-tile.is-idle {
+  border-left-color: var(--border-strong);
+  background: var(--surface);
+}
+
+/* Degraded: amber, with a triangle glyph. */
+.status-tile.is-warn {
+  border-left-color: var(--warn);
+  background: var(--warn-soft);
+}
+
+.status-tile.is-warn .status-dot {
+  background: var(--warn);
+  border-color: var(--warn);
+  color: #fff;
+}
+
+.status-tile.is-warn .status-value {
+  color: var(--warn);
+}
+
+/* --------------------------------------------------------------------------
+   8. TRANSACTION INTEGRITY  -  the tamper state
+   With red freed, a failed signature check gets four reinforcing signals:
+   a page-level alert, a tinted row with a heavy left border, a solid red
+   chip, and an amount cell that refuses to show a figure it cannot vouch for.
+   -------------------------------------------------------------------------- */
+.alert-alarm {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: flex-start;
+  border: 1px solid var(--alarm);
+  border-left: 5px solid var(--alarm);
+  background: var(--alarm-soft);
+  color: var(--alarm-strong);
+  border-radius: var(--radius-md);
+  padding: var(--sp-4);
+  margin-bottom: var(--sp-4);
+}
+
+.alert-alarm-icon {
+  font-size: var(--fs-title);
+  line-height: 1;
+  flex: none;
+}
+
+.alert-alarm-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-snug);
+  margin-bottom: var(--sp-1);
+}
+
+.alert-alarm-body {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+}
+
+tr.row-tampered > td {
+  background: var(--alarm-soft);
+}
+
+tr.row-tampered > td:first-child {
+  box-shadow: inset 4px 0 0 var(--alarm);
+}
+
+.amount-unverifiable {
+  color: var(--alarm-strong);
+  font-weight: 700;
+  font-style: normal;
+}
+
+@media (max-width: 768px) {
+  .table-stack tr.row-tampered {
+    border-color: var(--alarm);
+    border-left: 5px solid var(--alarm);
+    background: var(--alarm-soft);
+  }
+
+  tr.row-tampered > td:first-child {
+    box-shadow: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9. EMPTY STATES
+   Every empty state names the next action rather than reporting emptiness.
+   -------------------------------------------------------------------------- */
+.empty-state {
+  text-align: center;
+  padding: var(--sp-7) var(--sp-4);
+  color: var(--ink-soft);
+}
+
+.empty-state-title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-lead);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--sp-2);
+}
+
+.empty-state-body {
+  font-size: var(--fs-sm);
+  max-width: 42ch;
+  margin: 0 auto;
+  line-height: var(--lh-body);
+}
+
+/* --------------------------------------------------------------------------
+   10. SMALL SCREENS  -  down to 375px
+   -------------------------------------------------------------------------- */
+@media (max-width: 575px) {
+  :root {
+    --card-pad: var(--sp-4);
+  }
+
+  h1 {
+    font-size: var(--fs-title);
+  }
+
+  .rail-node {
+    grid-template-columns: 32px 1fr;
+    gap: var(--sp-3);
+  }
+
+  .rail-marker {
+    width: 32px;
+    height: 32px;
+    font-size: var(--fs-micro);
+  }
+
+  .rail-track {
+    left: 15px;
+  }
+
+  .status-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .alert-alarm {
+    padding: var(--sp-3);
+  }
+}
+
+@media (max-width: 400px) {
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* A stage that genuinely failed. Consistent with the one meaning red carries
+   everywhere else in the interface: an integrity check did not pass. */
+.rail-node.is-failed .rail-marker {
+  background: var(--alarm);
+  border-color: var(--alarm);
+  color: #fff;
+}
+
+.rail-node.is-failed .rail-body {
+  border-color: var(--alarm);
+  background: var(--alarm-soft);
+}
+
+.rail-node.is-failed .rail-status {
+  color: var(--alarm-strong);
+}
+
+/* Visually hidden but available to screen readers, for the actions column
+   header that has no visible text. */
+.visually-hidden-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   11. ALERT SEVERITY  -  correcting the --danger alias fallout
+   --danger was repointed at --warn so that the *degraded-state badges*
+   (HTTPS off, check not yet run) stopped shouting in red. But .alert-danger
+   carries genuine failures - a rejected login, a refused transfer - and those
+   must stay red. It is given explicit --alarm colouring here rather than
+   inheriting the alias, so the two cases can never drift together again.
+   -------------------------------------------------------------------------- */
+.alert {
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  margin-bottom: var(--sp-4);
+}
+
+.alert-danger {
+  background: var(--alarm-soft);
+  color: var(--alarm-strong);
+  border: 1px solid var(--alarm);
+  border-left: 4px solid var(--alarm);
+}
+
+.alert-success {
+  background: var(--ok-soft);
+  color: var(--brand-accent-ink);
+  border: 1px solid rgba(10, 115, 115, 0.35);
+  border-left: 4px solid var(--brand-accent-ink);
+}
+
+/* Degraded but working. Distinct from a failure, deliberately. */
+.alert-warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+  border: 1px solid rgba(138, 83, 0, 0.35);
+  border-left: 4px solid var(--warn);
 }

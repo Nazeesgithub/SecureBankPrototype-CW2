@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
+import { useAuth } from "../context/AuthContext";
 
 export default function Settings() {
+  // Set on seeded accounts that are still using their shipped default
+  // password. refreshSession() clears it once the change succeeds.
+  const { user, refreshSession } = useAuth();
+  const mustChangePassword = user?.mustChangePassword === true;
   const [profileForm, setProfileForm] = useState({ name: "", email: "" });
   const [profileError, setProfileError] = useState("");
   const [profileSuccess, setProfileSuccess] = useState("");
@@ -47,6 +52,8 @@ export default function Settings() {
       const data = await api.changePassword(passwordForm);
       setPasswordSuccess(data.message);
       setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      // Picks up the cleared must_change_password flag so the banner goes away.
+      await refreshSession();
     } catch (err) {
       setPasswordError(err.message);
     } finally {
@@ -59,6 +66,17 @@ export default function Settings() {
       <div className="topbar">
         <h1>Settings</h1>
       </div>
+
+      {mustChangePassword && (
+        <div className="alert alert-danger" style={{ marginBottom: 20 }}>
+          <strong>&#9888; Change your password to continue.</strong>
+          <div style={{ marginTop: 4 }}>
+            This account is still using the default password it was created
+            with, which is published in the project README. Choose a new one
+            below before using the rest of the application.
+          </div>
+        </div>
+      )}
 
       <div className="row g-4">
         <div className="col-lg-6">

@@ -4,10 +4,32 @@ import { api } from "../api";
 import FirewallMonitor from "../components/FirewallMonitor";
 import FirewallConnections from "../components/FirewallConnections";
 
+// Three states, and each one is signalled by fill, glyph and border colour
+// together. Never by colour alone: the grid still reads correctly in
+// greyscale and for a viewer who cannot distinguish teal from amber.
+const IDLE_STATUSES = ["Idle", "Not Yet Tested", "Certificate Ready", "Ready", "Pending"];
+const WARN_STATUSES = ["Disabled", "Demo", "Inactive", "Missing"];
+
+function moduleState(status) {
+  if (WARN_STATUSES.includes(status)) return "warn";
+  if (IDLE_STATUSES.includes(status)) return "idle";
+  return "active";
+}
+
+const STATE_GLYPH = { active: "\u2713", idle: "", warn: "!" };
+
+// Plain-language reading of the state, so the grid is not only decorative.
+const STATE_MEANING = {
+  active: "running",
+  idle: "not yet exercised",
+  warn: "needs attention",
+};
+
 function moduleBadgeClass(status) {
-  return status === "Idle" || status === "Not Yet Tested" || status === "Certificate Ready" || status === "Disabled"
-    ? "badge badge-security"
-    : "badge badge-security on";
+  const state = moduleState(status);
+  if (state === "active") return "badge badge-security on";
+  if (state === "warn") return "badge badge-warn";
+  return "badge badge-idle";
 }
 
 export default function SecurityCenter() {
@@ -20,7 +42,13 @@ export default function SecurityCenter() {
     api
       .securityOverview()
       .then(setData)
-      .catch((err) => setError(err.message));
+      .catch((err) =>
+        setError(
+          err?.status === 401 || /authentication required/i.test(err?.message || "")
+            ? "Your session has timed out. Sign in again to view the Security Center."
+            : `${err.message} Reload the page; if it persists, confirm the API is running and reachable over HTTPS.`,
+        ),
+      );
   }, []);
 
   const trace = useMemo(() => data?.networkTrace || [], [data]);
@@ -44,10 +72,16 @@ export default function SecurityCenter() {
     setTraceRunning(true);
   }
 
-  if (error) return <div className="alert alert-danger">{error}</div>;
+  if (error) return <div className="alert alert-danger" role="alert">{error}</div>;
   if (!data) return null;
 
   const lastLogin = data.lastRealLogin;
+  const activeCount = data.securityModules.filter(
+    (m) => moduleState(m.status) === "active",
+  ).length;
+  const idleCount = data.securityModules.filter(
+    (m) => moduleState(m.status) === "idle",
+  ).length;
 
   return (
     <>
@@ -129,18 +163,32 @@ export default function SecurityCenter() {
 
         <div className="col-lg-5">
           <div className="card h-100">
-            <h2 className="section-title">Security Status Dashboard</h2>
-            <div className="security-module-grid">
-              {data.securityModules.map((module) => (
-                <div className="security-module-tile" key={module.label}>
-                  <span className="text-soft" style={{ fontSize: "0.78rem" }}>
-                    {module.label}
-                  </span>
-                  <span className={moduleBadgeClass(module.status)}>
-                    {module.status}
-                  </span>
-                </div>
-              ))}
+            <h2 className="section-title">Security Status</h2>
+            <p className="text-soft" style={{ fontSize: "var(--fs-sm)", marginTop: "calc(-1 * var(--sp-2))" }}>
+              {activeCount} of {data.securityModules.length} controls running.
+              {idleCount > 0
+                ? ` ${idleCount} not yet exercised \u2014 run a transfer or an attack simulation to bring them up.`
+                : " Every control has been exercised."}
+            </p>
+            <div className="status-grid">
+              {data.securityModules.map((module) => {
+                const state = moduleState(module.status);
+                return (
+                  <div
+                    className={`status-tile is-${state}`}
+                    key={module.label}
+                    title={`${module.label}: ${module.status} (${STATE_MEANING[state]})`}
+                  >
+                    <span className="status-dot" aria-hidden="true">
+                      {STATE_GLYPH[state]}
+                    </span>
+                    <span className="status-text">
+                      <span className="status-label">{module.label}</span>
+                      <span className="status-value">{module.status}</span>
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

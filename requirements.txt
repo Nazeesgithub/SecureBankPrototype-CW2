@@ -1,6 +1,15 @@
 Flask==3.0.3
 Flask-Login==0.6.3
 Flask-Cors==4.0.1
+# CSRF protection for the state-changing JSON endpoints
+Flask-WTF==1.3.0
 pycryptodome==3.23.0
 pyotp==2.9.0
 python-dotenv==1.1.1
+# Protocol level - secure file transfer (SFTP over SSH-2)
+paramiko==5.0.0
+# Protocol level - used by scripts/generate_cert.py to mint the local TLS certificate
+cryptography==50.0.1
+# Build-time only. Used by scripts/generate_icons.py to render the PNG icon
+# fallback from the shield mark; the running application never imports it.
+Pillow==12.2.0

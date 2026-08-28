@@ -141,7 +141,7 @@ export default function Profile() {
 
               <dt className="col-sm-6 text-soft">Password Hashing</dt>
               <dd className="col-sm-6">
-                <span className="badge badge-success">{security.passwordHashing || "SHA-256"}</span>
+                <span className="badge badge-success">{security.passwordHashing || "scrypt"}</span>
               </dd>
 
               <dt className="col-sm-6 text-soft">Login Verification</dt>

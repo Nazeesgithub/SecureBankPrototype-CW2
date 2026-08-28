@@ -3,12 +3,23 @@ __pycache__/
 .venv/
 venv/
 .env
+# Randomly generated Flask session signing key (see config.load_secret_key).
+# Committing it would let anyone forge a session cookie for any account.
+.secret_key
 cert.pem
 key.pem
 security/rsa_private.pem
 security/rsa_public.pem
 database/*.db
 backups/*.db
+# Encrypted snapshot, its AES key, and its integrity manifest. The .key file in
+# particular must never be committed - it decrypts the whole database backup.
+backups/*.enc
+backups/*.key
+backups/*.sha256
+# Random KDF salt for the backup key. Not secret on its own, but there is no
+# reason to publish it either.
+backups/*.salt
 logs/*.log
 *.db
 *.log

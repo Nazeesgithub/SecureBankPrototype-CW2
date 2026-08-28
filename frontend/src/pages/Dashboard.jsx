@@ -192,7 +192,7 @@ export default function Dashboard() {
           </div>
           <div className="dash-security-row">
             <span className="text-soft dash-security-label"><KeyRound size={15} strokeWidth={1.5} /> Password hashing</span>
-            <span className="badge badge-success">{security.passwordHashing || "SHA-256"}</span>
+            <span className="badge badge-success">{security.passwordHashing || "scrypt"}</span>
           </div>
           <div className="dash-security-row">
             <span className="text-soft dash-security-label"><ScanFace size={15} strokeWidth={1.5} /> Login verification</span>
@@ -227,7 +227,9 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <div className={`mono timeline-amount ${tx.direction === "sent" ? "timeline-amount-out" : "timeline-amount-in"}`}>
-                    {tx.direction === "sent" ? "-" : "+"}LKR {tx.amount.toFixed(2)}
+                    {tx.amount === null || tx.amount === undefined
+                      ? "unreadable"
+                      : `${tx.direction === "sent" ? "-" : "+"}LKR ${tx.amount.toFixed(2)}`}
                   </div>
                 </div>
               ))}

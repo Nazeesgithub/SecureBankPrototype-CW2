@@ -98,7 +98,7 @@ export default function LoginForm() {
             {error && <div className="alert alert-danger">{error}</div>}
 
             {passwordVerified && (
-              <div className="alert alert-success">✔ Password Verified (SHA-256) — redirecting to OTP...</div>
+              <div className="alert alert-success">✔ Password Verified (scrypt) — redirecting to OTP...</div>
             )}
 
             <form onSubmit={handleSubmit}>

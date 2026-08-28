@@ -2,15 +2,28 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Scalable mark, used by every current desktop browser. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Raster fallback for platforms that ignore SVG favicons, iOS home
+         screens in particular. Regenerate with scripts/generate_icons.py. -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Navy from the top of the shield gradient, so mobile browser chrome
+         matches the mark. -->
+    <meta name="theme-color" content="#1B2A6B" />
+    <meta
+      name="description"
+      content="SecureBank is a secure online banking prototype demonstrating end-to-end cryptographic protection: scrypt password hashing, TOTP two-factor authentication, AES-256-GCM encrypted transactions and RSASSA-PSS digital signatures."
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
       rel="stylesheet"
     />
-    <title>SecureBank — Secure Retail Online Banking</title>
+    <title>SecureBank — Secure Online Banking</title>
   </head>
   <body>
     <div id="root"></div>

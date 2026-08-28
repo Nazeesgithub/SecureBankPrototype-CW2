@@ -41,7 +41,7 @@ export default function DatabaseViewer() {
             </div>
             <div>
               <span className="text-soft">Encryption</span>
-              <div className="mono">AES-256-CBC</div>
+              <div className="mono">AES-256-GCM</div>
             </div>
           </div>
         ) : (

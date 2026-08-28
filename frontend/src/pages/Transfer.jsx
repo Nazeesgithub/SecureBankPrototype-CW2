@@ -1,8 +1,35 @@
 import { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { api } from "../api";
+import PipelineRail from "../components/PipelineRail";
+import { usePrefersReducedMotion } from "../components/usePrefersReducedMotion";
 
 const initialForm = { receiver: "", amount: "", description: "", source: "card" };
+
+// Every failure the transfer endpoint can return, paired with the action that
+// resolves it. An error that only reports a state leaves the user stuck.
+function remedyFor(err) {
+  const message = err?.message || "The transfer could not be completed.";
+  if (/no account found/i.test(message)) {
+    return `${message} Check the 12-digit account number with the recipient — it is shown on their dashboard.`;
+  }
+  if (/insufficient/i.test(message)) {
+    return `${message} Lower the amount, or top up the wallet from your current account first.`;
+  }
+  if (/own account/i.test(message)) {
+    return `${message} Enter the recipient's account number instead.`;
+  }
+  if (/positive number/i.test(message)) {
+    return `${message} Enter an amount such as 250.00, using digits and at most two decimal places.`;
+  }
+  if (/csrf/i.test(message)) {
+    return "Your session security token expired. Reload the page and try again.";
+  }
+  if (err?.status === 401 || /authentication required/i.test(message)) {
+    return "Your session has timed out. Sign in again to continue.";
+  }
+  return `${message} If it keeps happening, sign out and back in, then retry.`;
+}
 
 export default function Transfer() {
   const location = useLocation();
@@ -17,6 +44,7 @@ export default function Transfer() {
   const [pipeline, setPipeline] = useState(null);
   const [visibleSteps, setVisibleSteps] = useState(0);
   const [balances, setBalances] = useState(null);
+  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     api
@@ -47,15 +75,21 @@ export default function Transfer() {
       setBalances({ currentBalance: data.currentBalance, walletBalance: data.walletBalance });
       const steps = data.securityPipeline?.steps || [];
       setPipeline(steps);
-      steps.forEach((_, idx) => {
-        setTimeout(
-          () => setVisibleSteps((prev) => Math.max(prev, idx + 1)),
-          idx * 350,
-        );
-      });
+      if (reducedMotion) {
+        // No staged reveal: show the finished rail immediately.
+        setVisibleSteps(steps.length);
+      } else {
+        steps.forEach((_, idx) => {
+          setTimeout(
+            () => setVisibleSteps((prev) => Math.max(prev, idx + 1)),
+            idx * 260,
+          );
+        });
+      }
       setForm(initialForm);
     } catch (err) {
-      setError(err.message);
+      // Say what to do about it, not just what happened.
+      setError(remedyFor(err));
     } finally {
       setSubmitting(false);
     }
@@ -235,31 +269,29 @@ export default function Transfer() {
       )}
 
       {pipeline && (
-        <div className="card" style={{ maxWidth: 640, marginTop: 24 }}>
-          <h2 className="section-title">Transaction Security Processing</h2>
-          <div className="pipeline-steps">
-            {pipeline.slice(0, visibleSteps).map((step) => (
-              <div className="pipeline-step" key={step.step}>
-                <div className="pipeline-step-header">
-                  <span className="pipeline-step-number">Step {step.step}</span>
-                  <span className="badge badge-security on">
-                    {step.status === "verified" || step.status === "completed"
-                      ? "✔"
-                      : "…"}{" "}
-                    {step.algorithm}
-                  </span>
-                </div>
-                <div className="pipeline-step-title">{step.title}</div>
-                {step.value && <div className="mono">{step.value}</div>}
-              </div>
-            ))}
+        <div className="card" style={{ marginTop: "var(--sp-5)" }}>
+          <div className="topbar" style={{ marginBottom: "var(--sp-2)" }}>
+            <div>
+              <p className="eyebrow mb-1">Proof of processing</p>
+              <h2 className="section-title" style={{ marginBottom: 0 }}>
+                Cryptographic pipeline
+              </h2>
+            </div>
           </div>
+          <p className="text-soft" style={{ fontSize: "var(--fs-sm)", marginBottom: 0 }}>
+            Each stage below ran on the server for this transfer. The values are the
+            real hash, ciphertext, wrapped key and signature that were stored.
+          </p>
+
+          <PipelineRail steps={pipeline} visibleCount={visibleSteps} />
+
           {visibleSteps === pipeline.length && (
             <div
               className="alert alert-success"
-              style={{ marginTop: 16, marginBottom: 0 }}
+              style={{ marginTop: "var(--sp-5)", marginBottom: 0 }}
             >
-              Transfer Successful — all security checks passed.
+              Transfer complete — every stage of the pipeline succeeded and the
+              signed record is stored.
             </div>
           )}
         </div>

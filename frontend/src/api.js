@@ -1,10 +1,43 @@
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
+// HTTPS is the default for both processes (see scripts/generate_cert.py). Override
+// with VITE_API_BASE in frontend/.env if the API is running somewhere else.
+const API_BASE = import.meta.env.VITE_API_BASE || "https://localhost:5000/api";
 
-async function request(path, options = {}) {
-  const response = await fetch(`${API_BASE}${path}`, {
+// CSRF protection. The session cookie is SameSite=None so the SPA on a different
+// origin can use it, which means the browser also attaches it to requests forged
+// by any other site. The defence is a token bound to our session that an attacker
+// cannot read across origins, echoed back in a header the server checks.
+//
+// Fetched once and cached. GET requests do not need it.
+const UNSAFE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
+let csrfToken = null;
+
+async function getCsrfToken() {
+  if (csrfToken) return csrfToken;
+  const response = await fetch(`${API_BASE}/csrf-token`, {
     credentials: "include",
-    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+  });
+  if (!response.ok) throw new Error("Could not obtain a CSRF token.");
+  const body = await response.json();
+  csrfToken = body.csrfToken;
+  return csrfToken;
+}
+
+async function request(path, options = {}, allowCsrfRetry = true) {
+  const method = (options.method || "GET").toUpperCase();
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {}),
+  };
+
+  if (UNSAFE_METHODS.has(method)) {
+    headers["X-CSRFToken"] = await getCsrfToken();
+  }
+
+  // options is spread first so the headers computed above always win.
+  const response = await fetch(`${API_BASE}${path}`, {
     ...options,
+    credentials: "include",
+    headers,
   });
 
   const isJson = response.headers
@@ -13,6 +46,13 @@ async function request(path, options = {}) {
   const body = isJson ? await response.json() : null;
 
   if (!response.ok) {
+    // Logging in or out rotates the session, which invalidates a cached token.
+    // Drop it, fetch a fresh one, and retry exactly once.
+    if (response.status === 400 && body?.csrf === true && allowCsrfRetry) {
+      csrfToken = null;
+      return request(path, options, false);
+    }
+
     const error = new Error(body?.message || "Request failed.");
     error.status = response.status;
     error.body = body;
@@ -53,7 +93,12 @@ export const api = {
     }),
   verifyOtp: (otp) =>
     request("/otp/verify", { method: "POST", body: JSON.stringify({ otp }) }),
-  logout: () => request("/logout", { method: "POST" }),
+  logout: async () => {
+    const result = await request("/logout", { method: "POST" });
+    // The session is gone, so its token is dead too.
+    csrfToken = null;
+    return result;
+  },
   dashboard: () => request("/dashboard"),
   transfer: (payload) =>
     request("/transfer", { method: "POST", body: JSON.stringify(payload) }),

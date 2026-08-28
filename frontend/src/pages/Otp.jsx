@@ -22,7 +22,15 @@ export default function Otp() {
       const data = await api.verifyOtp(otp);
       setUser(data.user);
       setAccessGranted(true);
-      setTimeout(() => navigate(homeForRole(data.user.role)), 700);
+      setTimeout(() => {
+        // Accounts still on a shipped default password go straight to Settings
+        // to choose their own, rather than into the application.
+        if (data.user.mustChangePassword) {
+          navigate("/settings", { replace: true });
+        } else {
+          navigate(homeForRole(data.user.role));
+        }
+      }, 700);
     } catch (err) {
       setError(err.message);
       setSubmitting(false);
