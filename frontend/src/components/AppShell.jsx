@@ -49,8 +49,12 @@ export default function AppShell() {
   }
 
   const navItems = [
-    ...(user?.role === "customer" || user?.role === "admin" ? CUSTOMER_NAV : []),
-    ...(user?.role === "security" || user?.role === "admin" ? SECURITY_NAV : []),
+    ...(user?.role === "customer" || user?.role === "admin"
+      ? CUSTOMER_NAV
+      : []),
+    ...(user?.role === "security" || user?.role === "admin"
+      ? SECURITY_NAV
+      : []),
   ];
 
   return (
@@ -61,17 +65,26 @@ export default function AppShell() {
         aria-label={mobileOpen ? "Close menu" : "Open menu"}
         onClick={() => setMobileOpen((open) => !open)}
       >
-        {mobileOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
+        {mobileOpen ? (
+          <X size={20} strokeWidth={1.5} />
+        ) : (
+          <Menu size={20} strokeWidth={1.5} />
+        )}
       </button>
 
       {mobileOpen && (
-        <div className="sidebar-backdrop" onClick={() => setMobileOpen(false)} />
+        <div
+          className="sidebar-backdrop"
+          onClick={() => setMobileOpen(false)}
+        />
       )}
 
       <aside className={`sidebar${mobileOpen ? " sidebar-open" : ""}`}>
         <div className="sidebar-brand">
           <span className="dot" />
-          <span>{user?.role === "customer" ? "SecureBank" : "SecureBank SOC"}</span>
+          <span>
+            {user?.role === "customer" ? "SecureBank" : "SecureBank SOC"}
+          </span>
         </div>
 
         {navItems.map((item) => (

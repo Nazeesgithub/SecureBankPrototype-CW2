@@ -43,8 +43,9 @@ export default function Profile() {
             <h2 className="section-title">Account Details</h2>
             {isAdmin && (
               <div className="helper-box">
-                This account has administrator privileges: full access to users, transactions, security
-                logs, and database backups via the Admin Panel.
+                This account has administrator privileges: full access to users,
+                transactions, security logs, and database backups via the Admin
+                Panel.
               </div>
             )}
             <dl className="row mb-0">
@@ -71,7 +72,12 @@ export default function Profile() {
               <div className="profile-card-preview">
                 <div className="profile-card-preview-top">
                   <span className="eyebrow">SecureBank</span>
-                  <Wifi size={18} strokeWidth={1.5} className="dash-balance-wifi" aria-hidden="true" />
+                  <Wifi
+                    size={18}
+                    strokeWidth={1.5}
+                    className="dash-balance-wifi"
+                    aria-hidden="true"
+                  />
                 </div>
                 <div className="dash-balance-chip" aria-hidden="true" />
                 <div className="profile-card-preview-number mono">
@@ -89,7 +95,9 @@ export default function Profile() {
             <div className="security-badge-grid" style={{ marginBottom: 12 }}>
               <span className="badge badge-security on">✔ RSA 2048</span>
               <span className="badge badge-security on">✔ TLS Active</span>
-              <span className="badge badge-security on">✔ Certificate Verified</span>
+              <span className="badge badge-security on">
+                ✔ Certificate Verified
+              </span>
             </div>
             <p className="mb-0 text-soft">{certificateStatus}</p>
           </div>
@@ -103,12 +111,20 @@ export default function Profile() {
               <dl className="row mb-0">
                 <dt className="col-sm-6 text-soft">Current Account</dt>
                 <dd className="col-sm-6 mono">
-                  {dashboard ? `LKR ${dashboard.user.currentBalance.toFixed(2)}` : dashboardError ? "Unavailable" : "Loading..."}
+                  {dashboard
+                    ? `LKR ${dashboard.user.currentBalance.toFixed(2)}`
+                    : dashboardError
+                      ? "Unavailable"
+                      : "Loading..."}
                 </dd>
 
                 <dt className="col-sm-6 text-soft">Digital Wallet</dt>
                 <dd className="col-sm-6 mono">
-                  {dashboard ? `LKR ${dashboard.user.walletBalance.toFixed(2)}` : dashboardError ? "Unavailable" : "Loading..."}
+                  {dashboard
+                    ? `LKR ${dashboard.user.walletBalance.toFixed(2)}`
+                    : dashboardError
+                      ? "Unavailable"
+                      : "Loading..."}
                 </dd>
               </dl>
             </div>
@@ -116,12 +132,16 @@ export default function Profile() {
 
           <div className="card">
             <h2 className="section-title">Security &amp; Access</h2>
-            <dl className="row mb-0">
+            <dl className="row mb-0 profile-security-list">
               <dt className="col-sm-6 text-soft">Session</dt>
               <dd className="col-sm-6">
                 {dashboard ? (
-                  <span className={`badge ${security.sessionAuthenticated ? "badge-success" : "badge-danger"}`}>
-                    {security.sessionAuthenticated ? "Authenticated" : "Not authenticated"}
+                  <span
+                    className={`badge ${security.sessionAuthenticated ? "badge-success" : "badge-danger"}`}
+                  >
+                    {security.sessionAuthenticated
+                      ? "Authenticated"
+                      : "Not authenticated"}
                   </span>
                 ) : (
                   <span className="badge">Unavailable</span>
@@ -131,7 +151,9 @@ export default function Profile() {
               <dt className="col-sm-6 text-soft">Connection</dt>
               <dd className="col-sm-6">
                 {dashboard ? (
-                  <span className={`badge ${security.httpsConnection ? "badge-success" : "badge-danger"}`}>
+                  <span
+                    className={`badge ${security.httpsConnection ? "badge-success" : "badge-danger"}`}
+                  >
                     {security.httpsConnection ? "HTTPS" : "Not secure"}
                   </span>
                 ) : (
@@ -141,12 +163,16 @@ export default function Profile() {
 
               <dt className="col-sm-6 text-soft">Password Hashing</dt>
               <dd className="col-sm-6">
-                <span className="badge badge-success">{security.passwordHashing || "scrypt"}</span>
+                <span className="badge badge-success">
+                  {security.passwordHashing || "scrypt"}
+                </span>
               </dd>
 
               <dt className="col-sm-6 text-soft">Login Verification</dt>
               <dd className="col-sm-6">
-                <span className="badge badge-success">{security.otpAuthentication || "TOTP"}</span>
+                <span className="badge badge-success">
+                  {security.otpAuthentication || "TOTP"}
+                </span>
               </dd>
             </dl>
           </div>

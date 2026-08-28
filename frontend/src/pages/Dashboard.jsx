@@ -59,7 +59,8 @@ export default function Dashboard() {
     const seen = new Map();
     for (const tx of data.recentTransactions) {
       if (!tx.receiverAccountNumber) continue;
-      if (!seen.has(tx.receiverAccountNumber)) seen.set(tx.receiverAccountNumber, tx.receiver);
+      if (!seen.has(tx.receiverAccountNumber))
+        seen.set(tx.receiverAccountNumber, tx.receiver);
     }
     return Array.from(seen.entries()).slice(0, 4);
   }, [data]);
@@ -85,7 +86,12 @@ export default function Dashboard() {
         <div className="card dash-balance-card">
           <div className="dash-balance-top">
             <span className="eyebrow">Current Account Balance</span>
-            <Wifi size={20} strokeWidth={1.5} className="dash-balance-wifi" aria-hidden="true" />
+            <Wifi
+              size={20}
+              strokeWidth={1.5}
+              className="dash-balance-wifi"
+              aria-hidden="true"
+            />
           </div>
           <div className="dash-balance-chip" aria-hidden="true" />
           <div className="dash-balance-amount mono">
@@ -103,7 +109,9 @@ export default function Dashboard() {
                 style={{ color: "inherit", cursor: "pointer" }}
                 onClick={() => setRevealAccount((prev) => !prev)}
               >
-                {revealAccount ? data.user.accountNumber : maskAccountNumber(data.user.accountNumber)}
+                {revealAccount
+                  ? data.user.accountNumber
+                  : maskAccountNumber(data.user.accountNumber)}
               </div>
             </div>
           </div>
@@ -117,20 +125,32 @@ export default function Dashboard() {
             LKR {data.user.walletBalance.toFixed(2)}
           </div>
           <form onSubmit={handleTopUp} className="dash-topup-form">
-            {topUpError && <div className="alert alert-danger">{topUpError}</div>}
-            {topUpSuccess && <div className="alert alert-success">{topUpSuccess}</div>}
+            {topUpError && (
+              <div className="alert alert-danger">{topUpError}</div>
+            )}
+            {topUpSuccess && (
+              <div className="alert alert-success">{topUpSuccess}</div>
+            )}
             <div className="dash-topup-row">
+              <label htmlFor="wallet-topup-amount">Top-up amount (LKR)</label>
               <input
+                id="wallet-topup-amount"
                 type="number"
                 min="0"
                 step="0.01"
-                placeholder="Amount (LKR)"
+                placeholder="Enter amount"
                 value={topUpAmount}
                 onChange={(e) => setTopUpAmount(e.target.value)}
                 required
               />
-              <button className="btn btn-secondary" type="submit" disabled={topUpSubmitting}>
-                {topUpSubmitting ? "Processing..." : "Top Up from Current Account"}
+              <button
+                className="btn btn-secondary"
+                type="submit"
+                disabled={topUpSubmitting}
+              >
+                {topUpSubmitting
+                  ? "Processing..."
+                  : "Top Up from Current Account"}
               </button>
             </div>
           </form>
@@ -144,13 +164,19 @@ export default function Dashboard() {
           </div>
           <div className="dash-profile-row">
             <span className="text-soft">Role</span>
-            <span style={{ textTransform: "capitalize" }}>{data.user.role}</span>
+            <span style={{ textTransform: "capitalize" }}>
+              {data.user.role}
+            </span>
           </div>
           <div className="dash-profile-row">
             <span className="text-soft">Last login</span>
             <span>{data.user.lastLogin || "First login"}</span>
           </div>
-          <Link to="/profile" className="btn btn-secondary btn-block" style={{ marginTop: 6, padding: "6px 12px", fontSize: "0.85rem" }}>
+          <Link
+            to="/profile"
+            className="btn btn-secondary btn-block"
+            style={{ marginTop: 6, padding: "6px 12px", fontSize: "0.85rem" }}
+          >
             View Profile
           </Link>
         </div>
@@ -168,7 +194,9 @@ export default function Dashboard() {
                   state={{ receiver: accountNumber }}
                   className="dash-quick-item"
                 >
-                  <span className="dash-quick-avatar">{initials(receiver)}</span>
+                  <span className="dash-quick-avatar">
+                    {initials(receiver)}
+                  </span>
                   <span>{receiver}</span>
                 </Link>
               ))}
@@ -179,24 +207,42 @@ export default function Dashboard() {
         <div className="card dash-security-card">
           <h2 className="section-title">Account Security</h2>
           <div className="dash-security-row">
-            <span className="text-soft dash-security-label"><ShieldCheck size={15} strokeWidth={1.5} /> Session</span>
-            <span className={`badge ${security.sessionAuthenticated ? "badge-success" : "badge-danger"}`}>
-              {security.sessionAuthenticated ? "Authenticated" : "Not authenticated"}
+            <span className="text-soft dash-security-label">
+              <ShieldCheck size={15} strokeWidth={1.5} /> Session
+            </span>
+            <span
+              className={`badge ${security.sessionAuthenticated ? "badge-success" : "badge-danger"}`}
+            >
+              {security.sessionAuthenticated
+                ? "Authenticated"
+                : "Not authenticated"}
             </span>
           </div>
           <div className="dash-security-row">
-            <span className="text-soft dash-security-label"><Lock size={15} strokeWidth={1.5} /> Connection</span>
-            <span className={`badge ${security.httpsConnection ? "badge-success" : "badge-danger"}`}>
+            <span className="text-soft dash-security-label">
+              <Lock size={15} strokeWidth={1.5} /> Connection
+            </span>
+            <span
+              className={`badge ${security.httpsConnection ? "badge-success" : "badge-danger"}`}
+            >
               {security.httpsConnection ? "HTTPS" : "Not secure"}
             </span>
           </div>
           <div className="dash-security-row">
-            <span className="text-soft dash-security-label"><KeyRound size={15} strokeWidth={1.5} /> Password hashing</span>
-            <span className="badge badge-success">{security.passwordHashing || "scrypt"}</span>
+            <span className="text-soft dash-security-label">
+              <KeyRound size={15} strokeWidth={1.5} /> Password hashing
+            </span>
+            <span className="badge badge-success">
+              {security.passwordHashing || "scrypt"}
+            </span>
           </div>
           <div className="dash-security-row">
-            <span className="text-soft dash-security-label"><ScanFace size={15} strokeWidth={1.5} /> Login verification</span>
-            <span className="badge badge-success">{security.otpAuthentication || "TOTP"}</span>
+            <span className="text-soft dash-security-label">
+              <ScanFace size={15} strokeWidth={1.5} /> Login verification
+            </span>
+            <span className="badge badge-success">
+              {security.otpAuthentication || "TOTP"}
+            </span>
           </div>
         </div>
 
@@ -219,14 +265,22 @@ export default function Dashboard() {
                 <div className="timeline-row" key={`${tx.date}-${idx}`}>
                   <span className="timeline-time">{tx.date}</span>
                   <div className="timeline-body">
-                    <strong>{tx.direction === "sent" ? `To ${tx.counterparty}` : `From ${tx.counterparty}`}</strong>
+                    <strong>
+                      {tx.direction === "sent"
+                        ? `To ${tx.counterparty}`
+                        : `From ${tx.counterparty}`}
+                    </strong>
                     <div>
-                      <span className={`badge ${tx.status === "SUCCESS" ? "badge-success" : "badge-danger"}`}>
+                      <span
+                        className={`badge ${tx.status === "SUCCESS" ? "badge-success" : "badge-danger"}`}
+                      >
                         {tx.status}
                       </span>
                     </div>
                   </div>
-                  <div className={`mono timeline-amount ${tx.direction === "sent" ? "timeline-amount-out" : "timeline-amount-in"}`}>
+                  <div
+                    className={`mono timeline-amount ${tx.direction === "sent" ? "timeline-amount-out" : "timeline-amount-in"}`}
+                  >
                     {tx.amount === null || tx.amount === undefined
                       ? "unreadable"
                       : `${tx.direction === "sent" ? "-" : "+"}LKR ${tx.amount.toFixed(2)}`}
