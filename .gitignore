@@ -25,3 +25,6 @@ logs/*.log
 *.log
 frontend/node_modules/
 frontend/dist/
+
+# Local trust-store copy of the self-signed cert; machine-specific.
+securebank-local.cer
