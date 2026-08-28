@@ -28,3 +28,6 @@ frontend/dist/
 
 # Local trust-store copy of the self-signed cert; machine-specific.
 securebank-local.cer
+
+# Local trust-store copy of the self-signed cert; machine-specific.
+securebank-local.cer
